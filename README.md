@@ -24,7 +24,7 @@ The default prompt color might not look good on all terminals, so you can custom
 You can also use color to differentiate between modes/machines/environments.
 
 To do that, add the following line **before** `for plugin ...`:
-```
+```shell
 ZSH_PROMPT_COLOR=cyan # replace it with the color of your choice
 ```
 
