@@ -7,4 +7,5 @@ else
 fi
 
 alias grep='grep --color=auto'
+alias rgi='rg --no-ignore'
 alias cd..='cd ..'
