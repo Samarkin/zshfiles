@@ -6,6 +6,7 @@ git-summarize() {
     local RED='\033[0;31m'
     local YELLOW='\033[0;33m'
     local CYAN='\033[0;36m'
+    local BLUE='\033[0;34m'
     local RESET='\033[0m'
     local INDENT='        '
 
@@ -15,10 +16,25 @@ git-summarize() {
 
         # Check if directory contains a git repository
         if [ -d "$dir/.git" ]; then
-            echo "  $dir/"
+            # Print directory name with current branch (blue) in brackets
+            local branch=$(git -C "$dir" rev-parse --abbrev-ref HEAD 2>/dev/null)
+            if [ -n "$branch" ]; then
+                echo -e "  $dir/    ${BLUE}[${branch}]${RESET}"
+            else
+                echo "  $dir/"
+            fi
 
-            # Get unpublished commits (yellow)
-            if git -C "$dir" rev-parse --abbrev-ref --symbolic-full-name @{upstream} &>/dev/null; then
+            # Summarize upstream tracking status
+            local upstream=$(git -C "$dir" rev-parse --abbrev-ref --symbolic-full-name @{upstream} 2>/dev/null)
+            if [ -n "$upstream" ]; then
+                # Check if upstream is ahead (local branch behind)
+                local behind=$(git -C "$dir" rev-list --count HEAD..@{upstream} 2>/dev/null)
+                if [ -n "$behind" ] && [ "$behind" -gt 0 ]; then
+                    local commit_word="commits"
+                    [ "$behind" -eq 1 ] && commit_word="commit"
+                    echo -e "${INDENT}${CYAN}local branch is ${behind} ${commit_word} behind ${upstream}${RESET}"
+                fi
+                # Get unpublished commits (yellow)
                 git -C "$dir" log --oneline @{upstream}..HEAD 2>/dev/null | while read -r line; do
                     echo -e "${INDENT}${YELLOW}${line}${RESET}"
                 done
