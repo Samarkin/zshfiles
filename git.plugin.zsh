@@ -10,7 +10,7 @@ git-summarize() {
     local RESET='\033[0m'
     local INDENT='        '
 
-    for dir in . */(N); do
+    for dir in . */(ND); do
         # Remove trailing slash
         dir="${dir%/}"
 
@@ -66,7 +66,7 @@ git-summarize() {
 }
 
 git-fetch-all() {
-    for dir in . */(N); do
+    for dir in . */(ND); do
         dir="${dir%/}"
         if [ -d "$dir/.git" ]; then
             echo "  $dir/"
@@ -76,7 +76,7 @@ git-fetch-all() {
 }
 
 git-pull-all() {
-    for dir in . */(N); do
+    for dir in . */(ND); do
         dir="${dir%/}"
         if [ -d "$dir/.git" ]; then
             echo "  $dir/"
