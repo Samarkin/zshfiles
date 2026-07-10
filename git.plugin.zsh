@@ -1,5 +1,8 @@
+# Git helpers, mostly for when working with multiple repositories
+
 alias git-graph='git log --graph --oneline --all'
 
+# Show status of repositories in sub-directories
 git-summarize() {
     # Color codes
     local GREEN='\033[0;32m'
@@ -98,7 +101,7 @@ git-summarize() {
             for file in "${unstaged_del[@]}"; do echo -e "${INDENT}${RED}deleted:    $file${RESET}"; done
             for file in "${unstaged_typ[@]}"; do echo -e "${INDENT}${RED}typechange: $file${RESET}"; done
 
-            # Conflicts (red)
+            # Conflicts (magenta)
             for file in "${conflicts[@]}"; do echo -e "${INDENT}${MAGENTA}conflict:   $file${RESET}"; done
         fi
     done

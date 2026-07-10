@@ -1,3 +1,5 @@
+# Shortcuts for frequent commands
+
 if which eza > /dev/null 2>&1; then
   alias ls='eza --classify=auto'
 elif ls --version 2>&1 | grep -q 'GNU\|BusyBox'; then
