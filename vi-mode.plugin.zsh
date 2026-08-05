@@ -1,6 +1,10 @@
 # Enable vi keymap and make it pretty
 
-KEYTIMEOUT=5 # Remove delays when switching modes
+if [[ -n $SSH_CONNECTION ]]; then
+  KEYTIMEOUT=20 # Allow more time for ESC-sequences to arrive
+else
+  KEYTIMEOUT=5 # Remove delays when switching modes
+fi
 
 # Linux console uses private cursor codes (ESC[?Nc); GUI terminals use DECSCUSR (ESC[N q)
 if [[ $TERM == linux ]]; then
