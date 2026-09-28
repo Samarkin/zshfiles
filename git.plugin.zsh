@@ -1,5 +1,8 @@
 # Git helpers, mostly for when working with multiple repositories
 
+# Directory suffix marking a symlinked repository, used in place of '/'
+typeset -g _SYMLINK_SUFFIX='\033[0;36m@\033[0m'
+
 alias git-graph='git log --graph --oneline --all'
 
 # Show status of repositories in sub-directories
@@ -21,12 +24,16 @@ git-summarize() {
 
         # Check if directory contains a git repository
         if [ -d "$dir/.git" ]; then
+            # Highlight symlinked directories
+            local suffix='/'
+            [ -L "$dir" ] && suffix="$_SYMLINK_SUFFIX"
+
             # Print directory name with current branch (blue) in brackets
             local branch=$(git -C "$dir" rev-parse --abbrev-ref HEAD 2>/dev/null)
             if [ -n "$branch" ]; then
-                echo -e "  $dir/    ${BLUE}[${branch}]${RESET}"
+                echo -e "  $dir$suffix    ${BLUE}[${branch}]${RESET}"
             else
-                echo "  $dir/"
+                echo -e "  $dir$suffix"
             fi
 
             # Summarize upstream tracking status
@@ -112,7 +119,9 @@ git-fetch-all() {
     for dir in . */(ND); do
         dir="${dir%/}"
         if [ -d "$dir/.git" ]; then
-            echo "  $dir/"
+            local suffix='/'
+            [ -L "$dir" ] && suffix="$_SYMLINK_SUFFIX"
+            echo -e "  $dir$suffix"
             git -C "$dir" fetch --all --prune 2>&1 | sed "s/^/        /"
         fi
     done
@@ -123,7 +132,9 @@ git-pull-all() {
     for dir in . */(ND); do
         dir="${dir%/}"
         if [ -d "$dir/.git" ]; then
-            echo "  $dir/"
+            local suffix='/'
+            [ -L "$dir" ] && suffix="$_SYMLINK_SUFFIX"
+            echo -e "  $dir$suffix"
             git -C "$dir" pull --rebase 2>&1 | sed "s/^/        /"
         fi
     done
