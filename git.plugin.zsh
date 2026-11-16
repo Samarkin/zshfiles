@@ -5,6 +5,10 @@ typeset -g _SYMLINK_SUFFIX='\033[0;36m@\033[0m'
 
 alias git-graph='git log --graph --oneline --all'
 
+# Word regex treating each JSON string (including escaped quotes) as a single token
+typeset -g _JSON_WORD_REGEX='"([^"\\]|\\.)*"|[^[:space:],]+'
+alias git-diff-json-words='git diff --color-words="$_JSON_WORD_REGEX"'
+
 # Show status of repositories in sub-directories
 git-summarize() {
     # Color codes
